@@ -47,16 +47,7 @@ const mondayTaskSchema = new mongoose.Schema(
 
 const MondayTask = mongoose.model("MondayTask", mondayTaskSchema);
 
-// create validation schemaa
-const mondayTaskValidationSchema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  company: yup.string().required("Company is required"),
-  url: yup.string().required("Url is required"),
-  email: yup.string().required("Email is required"),
-});
-
 
 module.exports = {
   MondayTask,
-  mondayTaskValidationSchema,
 };

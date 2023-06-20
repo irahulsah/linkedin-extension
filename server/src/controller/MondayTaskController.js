@@ -1,7 +1,6 @@
 const httpStatus = require("http-status-codes");
 const {
   MondayTask,
-  mondayTaskValidationSchema,
 } = require("../models/MondayTask");
 const { constant } = require("../constant");
 
