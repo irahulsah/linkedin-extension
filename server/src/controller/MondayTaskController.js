@@ -5,51 +5,51 @@ const {
 const { constant } = require("../constant");
 
 const createMondayTask = async (req, res) => {
-  // const { event } = req.body;
-  // const monday_item = new MondayTask({
-  //   name: event.pulseName,
-  //   company: event.columnValues.company.value,
-  //   url: event.columnValues.url.value,
-  //   email: event.columnValues.email.value,
-  //   item_id: event.pulseId,
-  //   board_id: event.boardId,
-  //   group_id: event.groupId,
-  //   user_id: event.userId,
-  // });
-  // await monday_item.save();
+  const { event } = req.body;
+  const monday_item = new MondayTask({
+    name: event.pulseName,
+    company: event.columnValues.company.value,
+    url: event.columnValues.url.value,
+    email: event.columnValues.email.value,
+    item_id: event.pulseId,
+    board_id: event.boardId,
+    group_id: event.groupId,
+    user_id: event.userId,
+  });
+  await monday_item.save();
   res.status(200).send(req.body);
 };
 
 const updateMondayTask = async (req, res) => {
   const { event } = req.body;
-  // await MondayTask.findOneAndUpdate(
-  //   {
-  //     user_id: event.userId,
-  //     board_id: event.boardId,
-  //     group_id: event.groupId,
-  //     item_id: event.pulseId,
-  //   },
-  //   {
-  //     [event.columnId]: event.value.value,
-  //   }
-  // );
+  await MondayTask.findOneAndUpdate(
+    {
+      user_id: event.userId,
+      board_id: event.boardId,
+      group_id: event.groupId,
+      item_id: event.pulseId,
+    },
+    {
+      [event.columnId]: event.value.value,
+    }
+  );
   res.status(200).send(req.body);
 };
 
 const updateMondayItemChat = async (req, res) => {
-  // const { event } = req.body;
-  // await MondayTask.findOneAndUpdate(
-  //   {
-  //     user_id: event.userId,
-  //     board_id: event.boardId,
-  //     item_id: event.pulseId,
-  //   },
-  //   {
-  //     $push: {
-  //       description: event.textBody,
-  //     },
-  //   }
-  // );
+  const { event } = req.body;
+  await MondayTask.findOneAndUpdate(
+    {
+      user_id: event.userId,
+      board_id: event.boardId,
+      item_id: event.pulseId,
+    },
+    {
+      $push: {
+        description: event.textBody,
+      },
+    }
+  );
   res.status(200).send(req.body);
 };
 
