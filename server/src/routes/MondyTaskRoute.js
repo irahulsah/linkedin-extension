@@ -12,7 +12,7 @@ router.get("/:id", mondayTaskController.getMondayTaskById);
 
 router.post("/update-item", mondayTaskController.updateMondayTask);
 
-router.post("/update-item-description", mondayTaskController.updateMondayTask);
+router.post("/update-item-description", mondayTaskController.updateMondayDescriptionChat);
 
 router.delete("/:id", mondayTaskController.deleteMondayTask);
 

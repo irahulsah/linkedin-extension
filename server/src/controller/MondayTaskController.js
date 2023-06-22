@@ -36,7 +36,7 @@ const updateMondayTask = async (req, res) => {
   res.status(200).send(req.body);
 };
 
-const updateMondayItemChat = async (req, res) => {
+const updateMondayDescriptionChat = async (req, res) => {
   const { event } = req.body;
   await MondayTask.findOneAndUpdate(
     {
@@ -105,6 +105,6 @@ module.exports = {
   getAllMondayTask,
   deleteMondayTask,
   updateMondayTask,
-  updateMondayItemChat,
+  updateMondayDescriptionChat,
   getMondayTaskById,
 };
