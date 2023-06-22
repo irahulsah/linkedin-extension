@@ -1,11 +1,9 @@
-// constants 
-
+// constants
+const mondayApiUrl = "https://api.monday.com/v2";
 const apiKey =
-"eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI2MzIyMTM5NiwiYWFpIjoxMSwidWlkIjo0NDU5NjMzNCwiaWFkIjoiMjAyMy0wNi0xN1QxNTozNzo1OC4yMTNaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTc0MzExNjIsInJnbiI6InVzZTEifQ.d0fww48glqurlUJ9NcCud6rQYOVNdY_cGw7ypcVGkxk";
+  "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI2MzIyMTM5NiwiYWFpIjoxMSwidWlkIjo0NDU5NjMzNCwiaWFkIjoiMjAyMy0wNi0xN1QxNTozNzo1OC4yMTNaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTc0MzExNjIsInJnbiI6InVzZTEifQ.d0fww48glqurlUJ9NcCud6rQYOVNdY_cGw7ypcVGkxk";
 const boardId = 4661502644; // Replace with your board ID
-
-
-
+const groupId = "topics"; // Replace with your group ID
 
 // Find the profile name element
 const profileNameElement = document.querySelector(
@@ -15,7 +13,7 @@ const profileNameElement = document.querySelector(
 // Find the <h1> tag inside the profile name element
 const h1Element = profileNameElement.querySelector("h1");
 
-// Create the button element
+// Create the save button element
 const saveButtonElement = document.createElement("button");
 saveButtonElement.innerText = "Save";
 saveButtonElement.style.backgroundColor = "#0077B5";
@@ -23,7 +21,7 @@ saveButtonElement.style.color = "white";
 saveButtonElement.style.padding = "10px 20px";
 saveButtonElement.style.margin = "10px 20px";
 
-// Add the button as a sibling to the <h1> tag
+// Add the button as a sibling to the <h1> tag (beside user name)
 h1Element.insertAdjacentElement("afterend", saveButtonElement);
 
 // Create the form popup elements
@@ -35,6 +33,7 @@ popupContainer.style.display = "none";
 const popupForm = document.createElement("div");
 popupForm.classList.add("popup-form");
 
+// close icon to close popup
 const closeIcon = document.createElement("div");
 closeIcon.classList.add("close-icon");
 closeIcon.innerHTML = "&#10005;";
@@ -66,9 +65,14 @@ const openFormPopup = () => {
   popupContainer.style.display = "block";
   document.body.classList.add("popup-open");
 
+  // set name, email, company, url
   setData();
 };
 
+// Append the form popup to the document body
+document.body.appendChild(popupContainer);
+
+// set name, email, company, url
 function setData() {
   const rightPanelElement = document.querySelector(
     ".pv-text-details__right-panel"
@@ -84,20 +88,17 @@ function setData() {
   document.getElementById("url").value = window.location.href;
 }
 
+// Add event listener to the "Save" button
+saveButtonElement.addEventListener("click", openFormPopup);
+
 // Function to close the form popup
 const closeFormPopup = () => {
   popupContainer.style.display = "none";
   document.body.classList.remove("popup-open");
 };
 
-// Add event listener to the "Save" button
-saveButtonElement.addEventListener("click", openFormPopup);
-
 // Add event listener to the close icon to close the form popup
 closeIcon.addEventListener("click", closeFormPopup);
-
-// Append the form popup to the document body
-document.body.appendChild(popupContainer);
 
 // Add event listener to the form submit event
 document.addEventListener("submit", (event) => {
@@ -110,13 +111,7 @@ document.addEventListener("submit", (event) => {
     const company = document.getElementById("company").value;
     const url = document.getElementById("url").value;
 
-
     saveToMonday(name, email, company, url);
-
-    // Perform desired actions with the contact information
-    // For example, you can save it to a database or display a success message
-
-    saveToDatabase();
 
     // Hide the form popup after submission
     closeFormPopup();
@@ -125,12 +120,10 @@ document.addEventListener("submit", (event) => {
 
 // Function to save form data to monday.com
 function saveToMonday(name, email, company, url) {
-  const apiUrl = "https://api.monday.com/v2";
-
   const variables = {
     boardId: boardId,
     itemName: name,
-    groupId: "topics",
+    groupId: groupId,
     columnValues: JSON.stringify({
       company: company,
       url: url,
@@ -150,7 +143,7 @@ function saveToMonday(name, email, company, url) {
     } 
 }`;
 
-  fetch(apiUrl, {
+  fetch(mondayApiUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -164,12 +157,14 @@ function saveToMonday(name, email, company, url) {
     .then((res) => res.json())
     .then((res) => {
       const itemId = res.data.create_item.id;
-      updateAboutUs(itemId);
+
+      // since for this particular item , we will save the user about info in the chat.
+      updateDescriptionOfUserInItemChat(itemId);
     });
 }
 
-// Function to update "About Us" content in monday.com
-const updateAboutUs = async (itemId) => {
+// Function to update "About Us" of user content in monday.com item chat board.
+const updateDescriptionOfUserInItemChat = async (itemId) => {
   // targeted the class for the about us content
   const aboutUsDiv = document.querySelector(
     ".inline-show-more-text.full-width"
@@ -183,7 +178,7 @@ const updateAboutUs = async (itemId) => {
     }
   }`;
 
-  fetch("https://api.monday.com/v2", {
+  fetch(mondayApiUrl, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -196,20 +191,3 @@ const updateAboutUs = async (itemId) => {
     .then((res) => res.json())
     .then((res) => console.log(JSON.stringify(res, null, 2)));
 };
-
-async function saveToDatabase() {
-  fetch("https://linkedin-extension.onrender.com/api/v1/monday-task", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: "name",
-      email: "rahul",
-      company: "rshs",
-      url: "sjsjjs",
-    }),
-  })
-    .then((res) => res.json())
-    .then((res) => console.log(JSON.stringify(res, null, 2)));
-}
