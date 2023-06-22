@@ -10,9 +10,9 @@ router.post("/", mondayTaskController.createMondayTask);
 
 router.get("/:id", mondayTaskController.getMondayTaskById);
 
-router.put("/update-item", mondayTaskController.updateMondayTask);
+router.post("/update-item", mondayTaskController.updateMondayTask);
 
-router.patch("/update-item-description", mondayTaskController.updateMondayTask);
+router.post("/update-item-description", mondayTaskController.updateMondayTask);
 
 router.delete("/:id", mondayTaskController.deleteMondayTask);
 
