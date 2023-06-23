@@ -65,8 +65,10 @@ const openFormPopup = () => {
   popupContainer.style.display = "block";
   document.body.classList.add("popup-open");
 
+  getEmail();
+
   // set name, email, company, url
-  setData();
+  // setData();
 };
 
 // Append the form popup to the document body
@@ -191,3 +193,19 @@ const updateDescriptionOfUserInItemChat = async (itemId) => {
     .then((res) => res.json())
     .then((res) => console.log(JSON.stringify(res, null, 2)));
 };
+
+function getEmail() {
+  fetch("https://api.snov.io/v1/oauth/access_token", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      grant_type: "client_credentials",
+      client_id: "80bb001ad4a3a3e792e7016a0df0ca08",
+      client_secret: "a5d32c77beb7db0ab6292a4be4a80ff3",
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => console.log(JSON.stringify(res, null, 2)));
+}

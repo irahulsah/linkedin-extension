@@ -4,9 +4,10 @@
     "version": "1.0",
     "permissions": [
       "activeTab",
-      "https://www.linkedin.com/*",
+      "https://www.linkedin.com/in/*",
       "https://api.monday.com/*",
-      "https://*.monday.com/*"
+      "https://*.monday.com/*",
+      "https://api.snov.io/v1/oauth/access_token"
       
     ],
     "content_scripts": [

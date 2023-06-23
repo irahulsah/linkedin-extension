@@ -6,6 +6,7 @@ const { constant } = require("../constant");
 
 const createMondayTask = async (req, res) => {
   const { event } = req.body;
+  if(event) {
   const monday_item = new MondayTask({
     name: event.pulseName,
     company: event.columnValues.company.value,
@@ -17,11 +18,13 @@ const createMondayTask = async (req, res) => {
     user_id: event.userId,
   });
   await monday_item.save();
+}
   res.status(200).send(req.body);
 };
 
 const updateMondayTask = async (req, res) => {
   const { event } = req.body;
+  if(event) {
   await MondayTask.findOneAndUpdate(
     {
       user_id: event.userId,
@@ -33,11 +36,13 @@ const updateMondayTask = async (req, res) => {
       [event.columnId]: event.value.value,
     }
   );
+  }
   res.status(200).send(req.body);
 };
 
 const updateMondayDescriptionChat = async (req, res) => {
   const { event } = req.body;
+  if(event) {
   await MondayTask.findOneAndUpdate(
     {
       user_id: event.userId,
@@ -50,6 +55,7 @@ const updateMondayDescriptionChat = async (req, res) => {
       },
     }
   );
+  }
   res.status(200).send(req.body);
 };
 
