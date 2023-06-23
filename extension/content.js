@@ -83,7 +83,9 @@ function setData() {
   const companyName = companyNameElement.textContent.trim();
 
   document.getElementById("name").value = h1Element.innerText;
-  document.getElementById("email").value = "rahulsah3660@gmail.com";
+
+  // for this , we have to use snov email finder from backend, since from frontend there is cors issue.
+  document.getElementById("email").value = "sample@email.com";
   document.getElementById("company").value = companyName;
   document.getElementById("url").value = window.location.href;
 }

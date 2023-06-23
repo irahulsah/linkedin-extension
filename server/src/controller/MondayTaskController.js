@@ -5,44 +5,6 @@ const {
 const { constant } = require("../constant");
 
 
-// https://snov.io/api?lang=en#EmailFinder - to get emails
-function getToken() {
-  fetch("https://api.snov.io/v1/oauth/access_token", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      grant_type: "client_credentials",
-      client_id: "80bb001ad4a3a3e792e7016a0df0ca08",
-      client_secret: "a5d32c77beb7db0ab6292a4be4a80ff3",
-    }),
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      getEmail(res.access_token)
-    });
-}
-function getEmail(token) {
-  fetch("https://api.snov.io/v1/add-names-to-find-emails", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      access_token: token,
-      domain: "https://www.linkedin.com/in/irahulsah/",
-      'lastName': "Sah",
-      'firstName': 'Rahul',
-    }),
-  })
-    .then((res) => res.json())
-    .then((res) => {
-    console.log(res)
-    });
-}
-
-
 const createMondayTask = async (req, res) => {
   const { event } = req.body;
   // const getAccessToken = await getToken();
@@ -154,3 +116,44 @@ module.exports = {
   updateMondayDescriptionChat,
   getMondayTaskById,
 };
+
+
+
+
+
+// todo later- max creadits reached. https://snov.io/api?lang=en#EmailFinder - to get emails
+// function getToken() {
+//   fetch("https://api.snov.io/v1/oauth/access_token", {
+//     method: "post",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       grant_type: "",
+//       client_id: "",
+//       client_secret: "",
+//     }),
+//   })
+//     .then((res) => res.json())
+//     .then((res) => {
+//       getEmail(res.access_token)
+//     });
+// }
+// function getEmail(token) {
+//   fetch("https://api.snov.io/v1/add-names-to-find-emails", {
+//     method: "post",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       access_token: token,
+//       domain: "https://www.linkedin.com/in/irahulsah/",
+//       'lastName': "Sah",
+//       'firstName': 'Rahul',
+//     }),
+//   })
+//     .then((res) => res.json())
+//     .then((res) => {
+//     console.log(res)
+//     });
+// }
