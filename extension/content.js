@@ -19,6 +19,16 @@ window.addEventListener("click", function (event) {
   }
 });
 
+
+// even if we reload the page, the code must execute
+
+window.onload = function() {
+    const match = window.location.href.match(regex);
+    if (match) {
+      runScript();
+  }
+};
+
 // whenever user go any profile page , the script will run .
 function runScript() {
   // Find the profile name element
