@@ -4,15 +4,14 @@
     "version": "1.0",
     "permissions": [
       "activeTab",
-      "https://www.linkedin.com/in/*",
+      "https://www.linkedin.com/*",
       "https://api.monday.com/*",
-      "https://*.monday.com/*",
-      "https://api.snov.io/v1/oauth/access_token"
+      "https://*.monday.com/*"
       
     ],
     "content_scripts": [
       {
-        "matches": ["https://www.linkedin.com/in/*"],
+        "matches": ["https://www.linkedin.com/*"],
         "js": ["content.js"],
         "css": ["global.css"],
         "run_at": "document_end" 
