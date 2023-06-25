@@ -12,7 +12,7 @@ const createMondayTask = async (req, res) => {
     name: event.pulseName,
     company: event.columnValues.company.value,
     url: event.columnValues.url.value,
-    email: event.columnValues.email.value,
+    email: event.columnValues.email?.value ?? '',
     item_id: event.pulseId,
     board_id: event.boardId,
     group_id: event.groupId,
