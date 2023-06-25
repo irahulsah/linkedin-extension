@@ -232,7 +232,7 @@ function runScript() {
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        Authorization: apiKey,
+        Authorization: mondayApiKey,
       },
       body: JSON.stringify({
         query: query,
