@@ -1,10 +1,18 @@
 // constants
+const mondayApiKey =
+  "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI2MzIyMTM5NiwiYWFpIjoxMSwidWlkIjo0NDU5NjMzNCwiaWFkIjoiMjAyMy0wNi0xN1QxNTozNzo1OC4yMTNaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTc0MzExNjIsInJnbiI6InVzZTEifQ.d0fww48glqurlUJ9NcCud6rQYOVNdY_cGw7ypcVGkxk";
 const mondayApiUrl = "https://api.monday.com/v2";
 const getProspectWithURLSnovApi = "https://api.snov.io/v1/get-emails-from-url";
 const addUrlForSearchApiUrl = "https://api.snov.io/v1/add-url-for-search";
+const generateAccessTokenApiUrl = "https://api.snov.io/v1/oauth/access_token";
 var accessToken = "";
-const boardId = 4661502644; // Replace with your board ID
-const groupId = "topics"; // Replace with your group ID
+// Replace with your board ID
+const boardId = 4661502644; 
+// Replace with your group ID
+const groupId = "topics"; 
+
+const client_id = "80bb001ad4a3a3e792e7016a0df0ca08";
+const client_secret = "a5d32c77beb7db0ab6292a4be4a80ff3";
 
 //regex pattern - to match the linkedin page url
 const regex = /^https:\/\/www\.linkedin\.com\/in\/([^/]+)\/$/;
@@ -189,7 +197,7 @@ function runScript() {
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        Authorization: accessToken,
+        Authorization: mondayApiKey,
       },
       body: JSON.stringify({
         query: query,
@@ -286,12 +294,12 @@ function getToken() {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       grant_type: "client_credentials",
-      client_id: "80bb001ad4a3a3e792e7016a0df0ca08",
-      client_secret: "a5d32c77beb7db0ab6292a4be4a80ff3",
+      client_id: client_id,
+      client_secret: client_secret,
     }),
   };
 
-  fetch("https://api.snov.io/v1/oauth/access_token", requestOptions)
+  fetch(generateAccessTokenApiUrl, requestOptions)
     .then((response) => response.json())
     .then((data) => {
       // Handle the response data, which will contain the access_token

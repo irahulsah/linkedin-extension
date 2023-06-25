@@ -5,8 +5,7 @@
     "permissions": [
       "activeTab",
       "https://www.linkedin.com/*",
-      "https://api.monday.com/*",
-      "https://*.monday.com/*"
+      "https://api.monday.com/v2"
     ],
     "content_scripts": [
       {

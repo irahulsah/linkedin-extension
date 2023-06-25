@@ -1,10 +1,20 @@
 LinkedIn Extension
 
 - in content.js, replace value of constants variable
+   const mondayApiKey = "";
    const mondayApiUrl = "https://api.monday.com/v2";
-   const apiKey ="";
-   const boardId = 4661502644; // Replace with your board ID
-   const groupId = "topics"; // Replace with your group ID
+   const getProspectWithURLSnovApi = "https://api.snov.io/v1/get-emails-from-url";
+   const addUrlForSearchApiUrl = "https://api.snov.io/v1/add-url-for-search";
+   const generateAccessTokenApiUrl = "https://api.snov.io/v1/oauth/access_token";
+   var accessToken = "";
+   // Replace with your board ID
+   const boardId = 12345678; 
+   // Replace with your group ID
+   const groupId = "topics"; 
+
+   const client_id = "";  
+   const client_secret = "";
+
 
 - load the extension into the browser 
 - open linkedin, go to any profile save, A save button will appear. Click on save
