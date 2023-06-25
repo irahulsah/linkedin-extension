@@ -1,40 +1,53 @@
 // constants
 const mondayApiUrl = "https://api.monday.com/v2";
-const apiKey =
-  "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI2MzIyMTM5NiwiYWFpIjoxMSwidWlkIjo0NDU5NjMzNCwiaWFkIjoiMjAyMy0wNi0xN1QxNTozNzo1OC4yMTNaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTc0MzExNjIsInJnbiI6InVzZTEifQ.d0fww48glqurlUJ9NcCud6rQYOVNdY_cGw7ypcVGkxk";
+const getProspectWithURLSnovApi = "https://api.snov.io/v1/get-emails-from-url";
+const addUrlForSearchApiUrl = "https://api.snov.io/v1/add-url-for-search";
+var accessToken = "";
 const boardId = 4661502644; // Replace with your board ID
 const groupId = "topics"; // Replace with your group ID
 
 //regex pattern - to match the linkedin page url
 const regex = /^https:\/\/www\.linkedin\.com\/in\/([^/]+)\/$/;
-
+const regexProfileUrl = /\/in\/([\w-]+)\//;
 
 // will run in the start of the page, listen to link changes , when it matches with the user profile path url, the script will run
+
+// 1. when we click on name, profile picture on home feed, we match the upper parent element which a <a  href="/in/irahulsah"/> and get the href to compare with the regex
 window.addEventListener("click", function (event) {
-  if (event.target.tagName === "A") {
-    const match = event.target.href.match(regex);
-    if (match) {
-      runScript();
+  const anchorElement = event.target.closest("a");
+  if (anchorElement) {
+    const hrefValue = anchorElement.getAttribute("href");
+    if (hrefValue.match(regexProfileUrl)) {
+      window.addEventListener("load", function () {
+        runScript();
+      });
+
+      // Navigate to the profile page
+      window.location.href = hrefValue;
     }
+    // Do something with hrefValue
   }
 });
 
-
 // even if we reload the page, the code must execute
 
-window.onload = function() {
-    const match = window.location.href.match(regex);
-    if (match) {
-      runScript();
+window.onload = function () {
+  const match = window.location.href.match(regex);
+  if (match) {
+    runScript();
   }
 };
 
 // whenever user go any profile page , the script will run .
 function runScript() {
+  //fetch and initialze the access_token
+  getToken();
+
   // Find the profile name element
   const profileNameElement = document.querySelector(
     ".pv-text-details__left-panel"
   );
+  console.log(profileNameElement, "profileNameElement");
 
   // Find the <h1> tag inside the profile name element
   const h1Element = profileNameElement.querySelector("h1");
@@ -87,10 +100,13 @@ function runScript() {
   popupContainer.appendChild(popupForm);
 
   // Function to open the form popup
-  const openFormPopup = () => {
+  const openFormPopup = async () => {
+    //fetch email from snov api, first retrive the information, if it is failed or prospect  not found, we will add the url to search and re-hit the getEmailFromSnovApiAndSetEmailInForm;
+    // set email in the dom element/
+    getEmailFromSnovApiAndSetEmailInForm();
+
     popupContainer.style.display = "block";
     document.body.classList.add("popup-open");
-
     // set name, email, company, url
     setData();
   };
@@ -110,8 +126,6 @@ function runScript() {
 
     document.getElementById("name").value = h1Element.innerText;
 
-    // for this , we have to use snov email finder from backend, since from frontend there is cors issue.
-    document.getElementById("email").value = "sample@email.com";
     document.getElementById("company").value = companyName;
     document.getElementById("url").value = window.location.href;
   }
@@ -175,7 +189,7 @@ function runScript() {
       method: "post",
       headers: {
         "Content-Type": "application/json",
-        Authorization: apiKey,
+        Authorization: accessToken,
       },
       body: JSON.stringify({
         query: query,
@@ -219,4 +233,72 @@ function runScript() {
       .then((res) => res.json())
       .then((res) => console.log(JSON.stringify(res, null, 2)));
   };
+
+  function getEmailFromSnovApiAndSetEmailInForm() {
+    // initially clear previous email, as it is fetched from snov api
+    document.getElementById("email").value = "";
+
+    const profileUrl = window.location.href;
+    fetch(getProspectWithURLSnovApi, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        access_token: accessToken,
+        url: profileUrl,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        // for this , we have to use snov email finder from backend, since from frontend there is cors issue.
+        if (res.success) {
+          document.getElementById("email").value =
+            res.data.emails.at(-1)?.email ?? "";
+        } else {
+          addUrlForSnovApiSearch();
+        }
+      });
+  }
+  async function addUrlForSnovApiSearch() {
+    const profileUrl = window.location.href;
+    const res = await fetch(addUrlForSearchApiUrl, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        access_token: accessToken,
+        url: profileUrl,
+      }),
+    });
+    const resp = await res.json();
+    if (resp.success) {
+      getEmailFromSnovApiAndSetEmailInForm();
+    }
+  }
+}
+
+// get the access_token and store in a variable for apis calls
+function getToken() {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: "80bb001ad4a3a3e792e7016a0df0ca08",
+      client_secret: "a5d32c77beb7db0ab6292a4be4a80ff3",
+    }),
+  };
+
+  fetch("https://api.snov.io/v1/oauth/access_token", requestOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      // Handle the response data, which will contain the access_token
+      accessToken = data.access_token;
+      // Use the access_token for subsequent API requests
+    })
+    .catch((error) => {
+      // Handle any errors
+    });
 }

@@ -7,7 +7,8 @@ const { constant } = require("../constant");
 
 const createMondayTask = async (req, res) => {
   const { event } = req.body;
-  // const getAccessToken = await getToken();
+  const getAccessToken = await getToken();
+  console.log(getAccessToken, "getaccesstojen")
   if(event) {
   const monday_item = new MondayTask({
     name: event.pulseName,
@@ -122,23 +123,25 @@ module.exports = {
 
 
 // todo later- max creadits reached. https://snov.io/api?lang=en#EmailFinder - to get emails
-// function getToken() {
-//   fetch("https://api.snov.io/v1/oauth/access_token", {
-//     method: "post",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       grant_type: "",
-//       client_id: "",
-//       client_secret: "",
-//     }),
-//   })
-//     .then((res) => res.json())
-//     .then((res) => {
-//       getEmail(res.access_token)
-//     });
-// }
+function getToken() {
+  fetch("https://api.snov.io/v1/oauth/access_token", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      grant_type: "client_credentials",
+      client_id: "80bb001ad4a3a3e792e7016a0df0ca08",
+      client_secret: "a5d32c77beb7db0ab6292a4be4a80ff3",
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res, "res")
+    }).catch((err) => {
+      console.log(err)
+    });
+}
 // function getEmail(token) {
 //   fetch("https://api.snov.io/v1/add-names-to-find-emails", {
 //     method: "post",

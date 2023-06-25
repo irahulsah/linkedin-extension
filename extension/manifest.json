@@ -7,7 +7,6 @@
       "https://www.linkedin.com/*",
       "https://api.monday.com/*",
       "https://*.monday.com/*"
-      
     ],
     "content_scripts": [
       {
