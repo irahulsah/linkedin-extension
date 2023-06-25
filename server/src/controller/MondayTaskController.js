@@ -7,8 +7,6 @@ const { constant } = require("../constant");
 
 const createMondayTask = async (req, res) => {
   const { event } = req.body;
-  const getAccessToken = await getToken();
-  console.log(getAccessToken, "getaccesstojen")
   if(event) {
   const monday_item = new MondayTask({
     name: event.pulseName,
@@ -142,21 +140,3 @@ function getToken() {
       console.log(err)
     });
 }
-// function getEmail(token) {
-//   fetch("https://api.snov.io/v1/add-names-to-find-emails", {
-//     method: "post",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       access_token: token,
-//       domain: "https://www.linkedin.com/in/irahulsah/",
-//       'lastName': "Sah",
-//       'firstName': 'Rahul',
-//     }),
-//   })
-//     .then((res) => res.json())
-//     .then((res) => {
-//     console.log(res)
-//     });
-// }
